@@ -1,13 +1,14 @@
 const fs = require("fs");
+const path = require("path");
 const { getDirectory, createDirectory } = require("./utils/file");
 
 function writeTypescriptFile(soundDescriptions, config)
 {
     createDirectory(getDirectory(config.definitionDestFilePath));
-    fs.writeFileSync(config.definitionDestFilePath, composeTypescriptText(soundDescriptions));
+    fs.writeFileSync(config.definitionDestFilePath, composeTypescriptText(soundDescriptions, config));
 }
 
-function composeTypescriptText(soundDescriptions)
+function composeTypescriptText(soundDescriptions, config)
 {
     let text = `
 export interface Sound {
@@ -16,17 +17,18 @@ export interface Sound {
 }    
 `;
 
-    soundDescriptions.forEach(x => text += toTypescript(x));
+    soundDescriptions.forEach(x => text += toTypescript(x, config.definitionDestFilePath));
 
     return text;
 }
 
-function toTypescript(soundDescription)
+function toTypescript(soundDescription, typescriptFilePath)
 {
+    const typescriptDirectory = getDirectory(typescriptFilePath);
     return `
 export const ${soundDescription.typedName}: Sound = {
-    oggUrl: require("${soundDescription.oggFilePath}"),
-    mp3Url: require("${soundDescription.mp3FilePath}"),
+    oggUrl: require("${path.relative(typescriptDirectory, soundDescription.oggFilePath)}"),
+    mp3Url: require("${path.relative(typescriptDirectory, soundDescription.mp3FilePath)}"),
 };
 `;
 }
