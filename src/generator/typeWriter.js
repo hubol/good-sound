@@ -11,6 +11,7 @@ function writeTypescriptFile(soundDescriptions, config)
 function composeTypescriptText(soundDescriptions, config)
 {
     let text = `
+// This file is generated. Do not touch.
 export interface Sound {
     oggUrl: string;
     mp3Url: string;
