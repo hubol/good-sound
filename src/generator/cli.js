@@ -4,6 +4,7 @@ const path = require("path");
 const { getFileHash } = require("./utils/file");
 const { convertToMp3, convertToOgg } = require("./utils/convert");
 const { getSoundDescriptions } = require("./mapper");
+const { writeTypescriptFile } = require("./typeWriter");
 const timeUtils = require("./utils/time");
 
 const args = process.argv.slice(2);
@@ -16,16 +17,17 @@ const runImmediately = args.filter(x => x === "--build").length > 0;
 async function run()
 {
     const soundDescriptions = await getSoundDescriptions(soundSourceDirectoryPath, soundDestDirectoryPath);
-    console.log(JSON.stringify(soundDescriptions));
+    writeTypescriptFile(soundDescriptions, definitionDestFilePath);
 
-    // const identifiedSource = await convertUtils.identify(fileName);
-    // const convertToOgg = convertToOgg(fileName, `/Users/Hubol/Projects/typed-sound/src/generator/.out/test.ogg`);
-    // const convertToAac = convertToMp3(fileName, `/Users/Hubol/Projects/typed-sound/src/generator/.out/test.mp3`);
-    //
-    // await Promise.all([convertToOgg, convertToAac]);
+    const conversionPromises = soundDescriptions.map(x => {
+        const convertToOggPromise = convertToOgg(x.sourceFilePath, x.oggFilePath);
+        const convertToAacPromise = convertToMp3(x.sourceFilePath, x.mp3FilePath);
 
-    // /Users/Hubol/Projects/super-bogus/res/sounds/-viewsteam.wav
-    // /Users/Hubol/Projects/typed-sound/src/generator/.out/
+        return Promise.all([convertToOggPromise, convertToAacPromise])
+            .catch(e => console.error(`Failed to convert ${x.typedName}: ${e}`))
+    });
+
+    await Promise.all(conversionPromises);
 }
 
 run()
