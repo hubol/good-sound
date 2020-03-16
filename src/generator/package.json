@@ -1,9 +1,0 @@
-{
-  "name": "@typed-sound/generator",
-  "version": "0.1.0",
-  "description": "Generate typed sound definitions at development and build time.",
-  "bin": {
-    "typed-sound-generator": "cli.js"
-  },
-  "author": "Hubol"
-}
