@@ -10,12 +10,9 @@ function writeTypescriptFile(soundDescriptions, config)
 
 function composeTypescriptText(soundDescriptions, config)
 {
-    let text = `
+    let text = `import { Howl } from 'howler';
+    
 // This file is generated. Do not touch.
-export interface Sound {
-    oggUrl: string;
-    mp3Url: string;
-}    
 `;
 
     soundDescriptions.forEach(x => text += toTypescript(x, config.definitionDestFilePath));
@@ -27,10 +24,9 @@ function toTypescript(soundDescription, typescriptFilePath)
 {
     const typescriptDirectory = getDirectory(typescriptFilePath);
     return `
-export const ${soundDescription.typedName}: Sound = {
-    oggUrl: require("${path.relative(typescriptDirectory, soundDescription.oggFilePath)}"),
-    mp3Url: require("${path.relative(typescriptDirectory, soundDescription.mp3FilePath)}"),
-};
+export const ${soundDescription.typedName} = new Howl({
+    src: [require("${path.relative(typescriptDirectory, soundDescription.oggFilePath)}"), require("${path.relative(typescriptDirectory, soundDescription.mp3FilePath)}")]
+});
 `;
 }
 
