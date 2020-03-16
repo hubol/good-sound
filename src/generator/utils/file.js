@@ -76,9 +76,14 @@ function getAllFiles(dirPath, arrayOfFiles)
     return arrayOfFiles;
 }
 
-function createDirectory(filePath)
+function getDirectory(filePath)
 {
-    fs.mkdirSync(path.basename(path.dirname(filePath)), { recursive: true });
+    return path.basename(path.dirname(filePath));
 }
 
-module.exports = { getFileHash, getAllFiles, createDirectory };
+function createDirectory(directoryPath)
+{
+    fs.mkdirSync(directoryPath, { recursive: true });
+}
+
+module.exports = { getFileHash, getAllFiles, createDirectory, getDirectory };

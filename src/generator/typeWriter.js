@@ -1,9 +1,9 @@
 const fs = require("fs");
-const { createDirectory } = require("./utils/file");
+const { getDirectory, createDirectory } = require("./utils/file");
 
 function writeTypescriptFile(soundDescriptions, typescriptFilePath)
 {
-    createDirectory(typescriptFilePath);
+    createDirectory(getDirectory(typescriptFilePath));
     fs.writeFileSync(typescriptFilePath, composeTypescriptText(soundDescriptions));
 }
 

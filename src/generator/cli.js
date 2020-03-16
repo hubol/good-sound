@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const path = require("path");
-const { getFileHash } = require("./utils/file");
+const { createDirectory } = require("./utils/file");
 const { convertToMp3, convertToOgg } = require("./utils/convert");
 const { getSoundDescriptions } = require("./mapper");
 const { writeTypescriptFile } = require("./typeWriter");
@@ -19,6 +19,7 @@ async function run()
     const soundDescriptions = await getSoundDescriptions(soundSourceDirectoryPath, soundDestDirectoryPath);
     writeTypescriptFile(soundDescriptions, definitionDestFilePath);
 
+    createDirectory(soundDestDirectoryPath);
     const conversionPromises = soundDescriptions.map(x => {
         const convertToOggPromise = convertToOgg(x.sourceFilePath, x.oggFilePath);
         const convertToAacPromise = convertToMp3(x.sourceFilePath, x.mp3FilePath);
