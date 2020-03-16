@@ -1,4 +1,5 @@
 const childProcess = require('child_process');
+const {Stopwatch} = require("./time");
 
 function Command(name, ...args)
 {
@@ -13,7 +14,7 @@ let executeCount = 0;
 function execute(command)
 {
     return new Promise((resolve, reject) => {
-        const startMilliseconds = new Date().getTime();
+        const stopwatch = new Stopwatch();
         const executeName = `PROC ${++executeCount}`;
 
         console.log(`${executeName}: > ${command.name} ${command.args.join(" ")}`);
@@ -27,16 +28,14 @@ function execute(command)
         });
 
         process.on('close', exitCode => {
-            const timeText = `${new Date().getTime() - startMilliseconds}ms`;
-
             if (exitCode)
             {
-                console.error(`${executeName}: ...errored with Code(${exitCode}) after ${timeText}`);
+                console.error(`${executeName}: ...errored with Code(${exitCode}) after ${stopwatch.elapsedMillisecondsText}`);
                 reject(new Error(`sox returned nonzero exit code: ${exitCode}. stderr: ${stderr}`));
                 return;
             }
 
-            console.log(`${executeName}: ...completed in ${timeText}`);
+            console.log(`${executeName}: ...completed in ${stopwatch.elapsedMillisecondsText}`);
             resolve();
         });
     });

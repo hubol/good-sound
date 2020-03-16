@@ -1,3 +1,4 @@
+const {Stopwatch} = require("./utils/time");
 const { createDirectory } = require("./utils/file");
 const { convertToMp3, convertToOgg } = require("./utils/convert");
 
@@ -8,7 +9,7 @@ async function convertSoundFiles(soundDescriptions, config, soundDescriptionPred
     if (filteredSoundDescriptions.length === 0)
         return;
 
-
+    const stopwatch = new Stopwatch();
     createDirectory(config.soundDestDirectoryPath);
     const conversionPromises = filteredSoundDescriptions
         .map(x => {
@@ -20,6 +21,7 @@ async function convertSoundFiles(soundDescriptions, config, soundDescriptionPred
         });
 
     await Promise.all(conversionPromises);
+    console.log(`Converting ${filteredSoundDescriptions.length} sound(s) took ${stopwatch.elapsedMillisecondsText}`);
 }
 
 module.exports = { convertSoundFiles };

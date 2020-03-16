@@ -5,4 +5,21 @@ function sleep(milliseconds)
     })
 }
 
-module.exports = { sleep };
+class Stopwatch
+{
+    constructor() {
+        this.startedMilliseconds = new Date().getTime();
+    }
+
+    get elapsedMilliseconds()
+    {
+        return new Date().getTime() - this.startedMilliseconds;
+    }
+
+    get elapsedMillisecondsText()
+    {
+        return `${this.elapsedMilliseconds}ms`;
+    }
+}
+
+module.exports = { sleep, Stopwatch };
