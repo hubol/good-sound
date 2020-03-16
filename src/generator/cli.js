@@ -7,19 +7,14 @@ const { getSoundDescriptions } = require("./mapper");
 const { writeTypescriptFile } = require("./typeWriter");
 const timeUtils = require("./utils/time");
 
-const args = process.argv.slice(2);
-
-const soundSourceDirectoryPath = path.resolve(args[0]);
-const soundDestDirectoryPath = path.resolve(args[1]);
-const definitionDestFilePath = path.resolve(args[2]);
-const runImmediately = args.filter(x => x === "--build").length > 0;
+const { config } = require("./config");
 
 async function run()
 {
-    const soundDescriptions = await getSoundDescriptions(soundSourceDirectoryPath, soundDestDirectoryPath);
-    writeTypescriptFile(soundDescriptions, definitionDestFilePath);
+    const soundDescriptions = await getSoundDescriptions(config);
+    writeTypescriptFile(soundDescriptions, config);
 
-    createDirectory(soundDestDirectoryPath);
+    createDirectory(config.soundDestDirectoryPath);
     const conversionPromises = soundDescriptions.map(x => {
         const convertToOggPromise = convertToOgg(x.sourceFilePath, x.oggFilePath);
         const convertToAacPromise = convertToMp3(x.sourceFilePath, x.mp3FilePath);

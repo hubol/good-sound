@@ -1,10 +1,10 @@
 const fs = require("fs");
 const { getDirectory, createDirectory } = require("./utils/file");
 
-function writeTypescriptFile(soundDescriptions, typescriptFilePath)
+function writeTypescriptFile(soundDescriptions, config)
 {
-    createDirectory(getDirectory(typescriptFilePath));
-    fs.writeFileSync(typescriptFilePath, composeTypescriptText(soundDescriptions));
+    createDirectory(getDirectory(config.definitionDestFilePath));
+    fs.writeFileSync(config.definitionDestFilePath, composeTypescriptText(soundDescriptions));
 }
 
 function composeTypescriptText(soundDescriptions)

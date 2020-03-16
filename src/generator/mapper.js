@@ -2,10 +2,10 @@ const path = require("path");
 const { toPascalCase } = require("./utils/pascalCaser");
 const { getFileHash, getAllFiles } = require("./utils/file");
 
-function getSoundDescriptions(sourceDirectoryPath, destDirectoryPath)
+function getSoundDescriptions(config)
 {
-    return Promise.all(getAllFiles(sourceDirectoryPath)
-        .map(x => toSoundDescription(x, destDirectoryPath)));
+    return Promise.all(getAllFiles(config.soundSourceDirectoryPath)
+        .map(x => toSoundDescription(x, config.soundDestDirectoryPath)));
 }
 
 async function toSoundDescription(soundFilePath, destDirectoryPath)
