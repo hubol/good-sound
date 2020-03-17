@@ -86,4 +86,12 @@ function createDirectory(directoryPath)
     fs.mkdirSync(directoryPath, { recursive: true });
 }
 
-module.exports = { getFileHash, getAllFiles, createDirectory, getDirectory };
+function getRelativePath(sourcePath, destinationPath)
+{
+    const relativePath = path.relative(sourcePath, destinationPath);
+    if (relativePath.charAt(0) !== ".")
+        return "./" + relativePath;
+    return relativePath;
+}
+
+module.exports = { getFileHash, getAllFiles, createDirectory, getDirectory, getRelativePath };
