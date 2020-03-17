@@ -4,7 +4,13 @@ const { getDirectory, createDirectory, getRelativePath } = require("./utils/file
 function writeTypescriptFile(soundDescriptions, config)
 {
     createDirectory(getDirectory(config.definitionDestFilePath));
-    fs.writeFileSync(config.definitionDestFilePath, composeTypescriptText(soundDescriptions, config));
+    const newTypescriptText = composeTypescriptText(soundDescriptions, config);
+    const currentTypescriptText = fs.readFileSync(config.definitionDestFilePath).toString();
+    if (currentTypescriptText === newTypescriptText)
+        return;
+
+    console.log(`Writing ${config.definitionDestFilePath}...`);
+    fs.writeFileSync(config.definitionDestFilePath, newTypescriptText);
 }
 
 function composeTypescriptText(soundDescriptions, config)
