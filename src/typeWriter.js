@@ -5,9 +5,12 @@ function writeTypescriptFile(soundDescriptions, config)
 {
     createDirectory(getDirectory(config.definitionDestFilePath));
     const newTypescriptText = composeTypescriptText(soundDescriptions, config);
-    const currentTypescriptText = fs.readFileSync(config.definitionDestFilePath).toString();
-    if (currentTypescriptText === newTypescriptText)
-        return;
+    if (fs.existsSync(config.definitionDestFilePath))
+    {
+        const currentTypescriptText = fs.readFileSync(config.definitionDestFilePath).toString();
+        if (currentTypescriptText === newTypescriptText)
+            return;
+    }
 
     console.log(`Writing ${config.definitionDestFilePath}...`);
     fs.writeFileSync(config.definitionDestFilePath, newTypescriptText);

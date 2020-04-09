@@ -61,9 +61,11 @@ function getFileSizeInBytes(fileName)
 
 function getAllFiles(dirPath, arrayOfFiles)
 {
-    const files = fs.readdirSync(dirPath);
-
     arrayOfFiles = arrayOfFiles || [];
+    if (!fs.existsSync(dirPath))
+        return arrayOfFiles;
+
+    const files = fs.readdirSync(dirPath);
 
     files.forEach(function(file) {
         const filePath = path.join(dirPath, file);
@@ -88,7 +90,7 @@ function createDirectory(directoryPath)
 
 function getRelativePath(sourcePath, destinationPath)
 {
-    const relativePath = path.relative(sourcePath, destinationPath);
+    const relativePath = path.relative(sourcePath, destinationPath).replace("\\", "/");
     if (relativePath.charAt(0) !== ".")
         return "./" + relativePath;
     return relativePath;
