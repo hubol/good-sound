@@ -23,17 +23,18 @@ function composeTypescriptText(soundDescriptions, config)
 // This file is generated. Do not touch.
 `;
 
-    soundDescriptions.forEach(x => text += toTypescript(x, config.definitionDestFilePath));
+    soundDescriptions.forEach(x => text += toTypescript(x, config));
 
     return text;
 }
 
-function toTypescript(soundDescription, typescriptFilePath)
+function toTypescript(soundDescription, config)
 {
-    const typescriptDirectory = getDirectory(typescriptFilePath);
+    const typescriptDirectory = getDirectory(config.definitionDestFilePath);
     return `
 export const ${soundDescription.typedName} = new Howl({
-    src: [require("${getRelativePath(typescriptDirectory, soundDescription.oggFilePath)}"), require("${getRelativePath(typescriptDirectory, soundDescription.mp3FilePath)}")]
+    src: [require("${getRelativePath(typescriptDirectory, soundDescription.oggFilePath)}"), require("${getRelativePath(typescriptDirectory, soundDescription.mp3FilePath)}")],
+    ${config.dontPreload ? "preload: false" : ""}
 });
 `;
 }

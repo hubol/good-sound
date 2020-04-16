@@ -1,6 +1,6 @@
 {
   "name": "generate-howls",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Convert audio files and generate Howls at development and build time.",
   "bin": {
     "generate-howls": "src/cli.js"
