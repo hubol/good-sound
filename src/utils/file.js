@@ -34,6 +34,8 @@ function readBytesToBuffer(fileName, start, length)
 
             const buffer = Buffer.alloc(length);
             fs.read(fd, buffer, 0, length, start, err => {
+                fs.closeSync(fd);
+
                 if (err) {
                     reject(err);
                     return;
