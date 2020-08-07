@@ -1,13 +1,11 @@
 #!/usr/bin/env node
 
-const fs = require("fs");
-
-const { getSoundDescriptions } = require("./mapper");
-const { writeTypescriptFile } = require("./typeWriter");
-const { convertSoundFiles } = require("./converter");
-const { sleep } = require("./utils/time");
-
-const { config } = require("./config");
+import fs from "fs";
+import {config} from "./config";
+import {sleep} from "./utils/time";
+import {getSoundDescriptions} from "./mapper";
+import {writeTypescriptFile} from "./typeWriter";
+import {convertSoundFiles, SoundDescriptionPredicate} from "./converter";
 
 async function run()
 {
@@ -34,14 +32,14 @@ async function run()
     }
 }
 
-async function runOnce(soundDescriptionPredicate)
+async function runOnce(soundDescriptionPredicate: SoundDescriptionPredicate = () => true)
 {
     const soundDescriptions = await getSoundDescriptions(config);
     writeTypescriptFile(soundDescriptions, config);
     await convertSoundFiles(
         soundDescriptions,
         config,
-        !soundDescriptionPredicate ? () => true : soundDescriptionPredicate);
+        soundDescriptionPredicate);
 }
 
 run()

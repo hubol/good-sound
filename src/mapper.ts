@@ -1,12 +1,19 @@
+import {Config} from "./config";
+
 const path = require("path");
 const { toPascalCase } = require("./utils/pascalCaser");
 const { getFileHash, getAllFiles } = require("./utils/file");
 
-function getSoundDescriptions(config)
+export function getSoundDescriptions(config: Config): Promise<SoundDescription[]>
 {
     return Promise.all(getAllFiles(config.soundSourceDirectoryPath)
         .map(x => toSoundDescription(x, config.soundDestDirectoryPath)));
 }
+
+type AsyncReturnType<T extends (...args: any) => Promise<any>> =
+    T extends (...args: any) => Promise<infer R> ? R : any
+
+export type SoundDescription = AsyncReturnType<typeof toSoundDescription>;
 
 async function toSoundDescription(soundFilePath, destDirectoryPath)
 {
@@ -23,5 +30,3 @@ async function toSoundDescription(soundFilePath, destDirectoryPath)
         hash
     };
 }
-
-module.exports = { getSoundDescriptions };

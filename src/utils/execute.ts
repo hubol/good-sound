@@ -1,7 +1,9 @@
 const childProcess = require('child_process');
 const {Stopwatch} = require("./time");
 
-function Command(name, ...args)
+type Command = ReturnType<typeof Command>;
+
+export function Command(name: string, ...args: string[])
 {
     return {
         name,
@@ -11,9 +13,9 @@ function Command(name, ...args)
 
 let executeCount = 0;
 
-function execute(command)
+export function execute(command: Command)
 {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
         const stopwatch = new Stopwatch();
         const executeName = `PROC ${++executeCount}`;
 
@@ -40,5 +42,3 @@ function execute(command)
         });
     });
 }
-
-module.exports = { Command, execute };

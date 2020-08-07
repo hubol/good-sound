@@ -1,15 +1,13 @@
-function sleep(milliseconds)
+export function sleep(milliseconds)
 {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
         setTimeout(() => resolve(), milliseconds);
     })
 }
 
-class Stopwatch
+export class Stopwatch
 {
-    constructor() {
-        this.startedMilliseconds = new Date().getTime();
-    }
+    public readonly startedMilliseconds = new Date().getTime();
 
     get elapsedMilliseconds()
     {
@@ -21,5 +19,3 @@ class Stopwatch
         return `${this.elapsedMilliseconds}ms`;
     }
 }
-
-module.exports = { sleep, Stopwatch };

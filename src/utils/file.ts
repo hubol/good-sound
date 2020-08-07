@@ -1,7 +1,7 @@
-const fs = require('fs');
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-async function getFileHash(fileName)
+export async function getFileHash(fileName)
 {
     const fileSizeInBytes = await getFileSizeInBytes(fileName);
     if (fileSizeInBytes === 0)
@@ -18,14 +18,14 @@ async function getFileHash(fileName)
     return buffer.toString("base64");
 }
 
-function readBytesToBuffer(fileName, start, length)
+export function readBytesToBuffer(fileName, start, length)
 {
     if (start < 0)
         throw new Error(`Invalid start position: ${start}`);
     if (length <= 0)
         throw new Error(`Invalid length: ${length}`);
 
-    return new Promise((resolve, reject) => {
+    return new Promise<Buffer>((resolve, reject) => {
         fs.open(fileName, "r", (err, fd) => {
             if (err) {
                 reject(err);
@@ -47,9 +47,9 @@ function readBytesToBuffer(fileName, start, length)
     });
 }
 
-function getFileSizeInBytes(fileName)
+export function getFileSizeInBytes(fileName)
 {
-    return new Promise((resolve, reject) => {
+    return new Promise<number>((resolve, reject) => {
         fs.stat(fileName, (err, stats) => {
            if (err) {
                reject(err);
@@ -61,9 +61,8 @@ function getFileSizeInBytes(fileName)
     });
 }
 
-function getAllFiles(dirPath, arrayOfFiles)
+export function getAllFiles(dirPath: string, arrayOfFiles: string[] = [])
 {
-    arrayOfFiles = arrayOfFiles || [];
     if (!fs.existsSync(dirPath))
         return arrayOfFiles;
 
@@ -80,22 +79,20 @@ function getAllFiles(dirPath, arrayOfFiles)
     return arrayOfFiles;
 }
 
-function getDirectory(filePath)
+export function getDirectory(filePath: string)
 {
     return path.basename(path.dirname(filePath));
 }
 
-function createDirectory(directoryPath)
+export function createDirectory(directoryPath: string)
 {
     fs.mkdirSync(directoryPath, { recursive: true });
 }
 
-function getRelativePath(sourcePath, destinationPath)
+export function getRelativePath(sourcePath: string, destinationPath: string)
 {
     const relativePath = path.relative(sourcePath, destinationPath).replace("\\", "/");
     if (relativePath.charAt(0) !== ".")
         return "./" + relativePath;
     return relativePath;
 }
-
-module.exports = { getFileHash, getAllFiles, createDirectory, getDirectory, getRelativePath };

@@ -1,7 +1,9 @@
-const fs = require("fs");
-const { getDirectory, createDirectory, getRelativePath } = require("./utils/file");
+import fs from "fs";
+import {createDirectory, getDirectory, getRelativePath} from "./utils/file";
+import {SoundDescription} from "./mapper";
+import {Config} from "./config";
 
-function writeTypescriptFile(soundDescriptions, config)
+export function writeTypescriptFile(soundDescriptions: SoundDescription[], config: Config)
 {
     createDirectory(getDirectory(config.definitionDestFilePath));
     const newTypescriptText = composeTypescriptText(soundDescriptions, config);
@@ -16,7 +18,7 @@ function writeTypescriptFile(soundDescriptions, config)
     fs.writeFileSync(config.definitionDestFilePath, newTypescriptText);
 }
 
-function composeTypescriptText(soundDescriptions, config)
+function composeTypescriptText(soundDescriptions: SoundDescription[], config: Config)
 {
     let text = `import { Howl } from 'howler';
     
@@ -28,7 +30,7 @@ function composeTypescriptText(soundDescriptions, config)
     return text;
 }
 
-function toTypescript(soundDescription, config)
+function toTypescript(soundDescription: SoundDescription, config: Config)
 {
     const typescriptDirectory = getDirectory(config.definitionDestFilePath);
     return `
@@ -38,5 +40,3 @@ export const ${soundDescription.typedName} = new Howl({
 });
 `;
 }
-
-module.exports = { writeTypescriptFile };

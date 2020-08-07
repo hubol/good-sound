@@ -1,4 +1,4 @@
-const path = require("path");
+import path from "path";
 
 const args = process.argv.slice(2);
 
@@ -8,7 +8,7 @@ const definitionDestFilePath = path.resolve(args[2]);
 const runImmediately = args.filter(x => x === "--build").length > 0;
 const dontPreload = args.filter(x => x.toLowerCase() === "--dontpreload").length > 0;
 
-const config = {
+export const config = {
     soundSourceDirectoryPath,
     soundDestDirectoryPath,
     definitionDestFilePath,
@@ -16,4 +16,4 @@ const config = {
     dontPreload
 };
 
-module.exports = { config };
+export type Config = typeof config;

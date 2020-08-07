@@ -1,6 +1,6 @@
 const { execute, Command } = require("./execute");
 
-function convertToMp3(sourceFileName, destFileName)
+export function convertToMp3(sourceFileName: string, destFileName: string)
 {
     if (!destFileName.endsWith(".mp3"))
         throw new Error(`destination file name: ${destFileName} does not end with .mp3!`);
@@ -8,12 +8,10 @@ function convertToMp3(sourceFileName, destFileName)
     return execute(new Command("sox", sourceFileName, destFileName));
 }
 
-function convertToOgg(sourceFileName, destFileName)
+export function convertToOgg(sourceFileName: string, destFileName: string)
 {
     if (!destFileName.endsWith(".ogg"))
         throw new Error(`destination file name: ${destFileName} does not end with .ogg!`);
 
     return execute(new Command("sox", sourceFileName, destFileName));
 }
-
-module.exports = { convertToMp3, convertToOgg };
