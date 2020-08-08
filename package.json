@@ -6,7 +6,7 @@
     "dist/"
   ],
   "scripts": {
-    "prepublish": "tsc"
+    "prepare": "tsc"
   },
   "bin": {
     "generate-howls": "dist/cli.js"
