@@ -1,21 +1,11 @@
-import fs from "fs";
-import {createDirectory, getDirectory, getRelativePath} from "./utils/file";
 import {SoundDescription} from "./mapper";
 import {Config} from "./config";
+import {createOrUpdateFile, getDirectory, getRelativePath} from "pissant-node";
 
 export function writeTypescriptFile(soundDescriptions: SoundDescription[], config: Config)
 {
-    createDirectory(getDirectory(config.definitionDestFilePath));
     const newTypescriptText = composeTypescriptText(soundDescriptions, config);
-    if (fs.existsSync(config.definitionDestFilePath))
-    {
-        const currentTypescriptText = fs.readFileSync(config.definitionDestFilePath).toString();
-        if (currentTypescriptText === newTypescriptText)
-            return;
-    }
-
-    console.log(`Writing ${config.definitionDestFilePath}...`);
-    fs.writeFileSync(config.definitionDestFilePath, newTypescriptText);
+    createOrUpdateFile(config.definitionDestFilePath, newTypescriptText);
 }
 
 function composeTypescriptText(soundDescriptions: SoundDescription[], config: Config)

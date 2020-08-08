@@ -2,49 +2,32 @@
 
 import fs from "fs";
 import {config} from "./config";
-import {sleep} from "./utils/time";
-import {getSoundDescriptions} from "./mapper";
+import {toSoundDescription} from "./mapper";
 import {writeTypescriptFile} from "./typeWriter";
-import {convertSoundFiles, SoundDescriptionPredicate} from "./converter";
+import {convertSoundFiles} from "./converter";
+import {main, Scan, scanDirectory, ScanDirectoryArgs} from "pissant-node";
 
-async function run()
+const scanDirectoryArgs: ScanDirectoryArgs = {
+    path: config.soundSourceDirectoryPath,
+    scanConsumer: consumeScan,
+    foreverArgs: !config.runImmediately ? { checkFileContents: true, intervalMilliseconds: 8_000 } : undefined
+};
+
+async function consumeScan(scan: Scan)
 {
-    if (config.runImmediately) {
-        await runOnce();
-        return;
-    }
+    const derivedFiles = await Promise.all(scan.files.map(async x => {
+        return {
+            ...await toSoundDescription(x.path, config),
+            ...x,
+        }
+    }));
 
-    const seenHashes = { };
-    while (true)
-    {
-        await runOnce(x => {
-            if (x.sourceFilePath in seenHashes
-                && seenHashes[x.sourceFilePath] === x.hash
-                && fs.existsSync(x.oggFilePath)
-                && fs.existsSync(x.mp3FilePath))
-                return false;
-
-            seenHashes[x.sourceFilePath] = x.hash;
-            return true;
-        });
-
-        await sleep(8 * 1000);
-    }
-}
-
-async function runOnce(soundDescriptionPredicate: SoundDescriptionPredicate = () => true)
-{
-    const soundDescriptions = await getSoundDescriptions(config);
-    writeTypescriptFile(soundDescriptions, config);
+    writeTypescriptFile(derivedFiles, config);
     await convertSoundFiles(
-        soundDescriptions,
+        derivedFiles,
         config,
-        soundDescriptionPredicate);
+        x =>
+            config.runImmediately || !(x.changedOrAdded && fs.existsSync(x.oggFilePath) && fs.existsSync(x.mp3FilePath)));
 }
 
-run()
-    .then(() => process.exit(0))
-    .catch(e => {
-        console.error(`An unexpected error occurred: ${e}`);
-        process.exit(1);
-    });
+main(scanDirectory(scanDirectoryArgs));

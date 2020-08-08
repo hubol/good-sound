@@ -1,12 +1,10 @@
-import {Stopwatch} from "./utils/time";
-import {createDirectory} from "./utils/file";
-import {convertToMp3, convertToOgg} from "./utils/convert";
 import {Config} from "./config";
 import {SoundDescription} from "./mapper";
+import {Predicate, Stopwatch} from "pissant";
+import {createDirectory} from "pissant-node";
+import {convertToMp3, convertToOgg} from "./soxConvert";
 
-export type SoundDescriptionPredicate = (soundDescription: SoundDescription) => boolean;
-
-export async function convertSoundFiles(soundDescriptions: SoundDescription[], config: Config, soundDescriptionPredicate: SoundDescriptionPredicate)
+export async function convertSoundFiles<T extends SoundDescription>(soundDescriptions: T[], config: Config, soundDescriptionPredicate: Predicate<T>)
 {
     const filteredSoundDescriptions = soundDescriptions
         .filter(soundDescriptionPredicate);
@@ -18,9 +16,9 @@ export async function convertSoundFiles(soundDescriptions: SoundDescription[], c
     const conversionPromises = filteredSoundDescriptions
         .map(x => {
             const convertToOggPromise = convertToOgg(x.sourceFilePath, x.oggFilePath);
-            const convertToAacPromise = convertToMp3(x.sourceFilePath, x.mp3FilePath);
+            const convertToMp3Promise = convertToMp3(x.sourceFilePath, x.mp3FilePath);
 
-            return Promise.all([convertToOggPromise, convertToAacPromise])
+            return Promise.all([convertToOggPromise, convertToMp3Promise])
                 .catch(e => console.error(`Failed to convert ${x.typedName}: ${e}`))
         });
 
