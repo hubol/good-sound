@@ -1,6 +1,6 @@
 {
   "name": "generate-howls",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Convert audio files and generate Howls at development and build time.",
   "files": [
     "dist/"
@@ -23,6 +23,6 @@
   },
   "dependencies": {
     "pissant": "^0.1.2",
-    "pissant-node": "^0.1.1"
+    "pissant-node": "^0.1.2"
   }
 }

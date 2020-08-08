@@ -27,7 +27,7 @@ async function consumeScan(scan: Scan)
         derivedFiles,
         config,
         x =>
-            config.runImmediately || !(x.changedOrAdded && fs.existsSync(x.oggFilePath) && fs.existsSync(x.mp3FilePath)));
+            config.runImmediately || x.changedOrAdded || !fs.existsSync(x.oggFilePath) || !fs.existsSync(x.mp3FilePath));
 }
 
 main(scanDirectory(scanDirectoryArgs));
