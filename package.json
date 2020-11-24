@@ -1,12 +1,12 @@
 {
   "name": "generate-howls",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Convert audio files and generate Howls at development and build time.",
   "files": [
     "dist/"
   ],
   "scripts": {
-    "prepare": "tsc"
+    "prepare": "rimraf dist && tsc"
   },
   "bin": {
     "generate-howls": "dist/cli.js"
@@ -19,10 +19,11 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^14.0.27",
+    "rimraf": "^3.0.2",
     "typescript": "^3.9.7"
   },
   "dependencies": {
     "pissant": "^0.1.2",
-    "pissant-node": "^0.1.2"
+    "pissant-node": "^0.1.5"
   }
 }
